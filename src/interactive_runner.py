@@ -12,16 +12,17 @@ from . import test_runner
 ROOT = Path(__file__).resolve().parents[1]
 
 def choose_provider() -> str:
-    options = {"1": "ollama", "2": "openai", "3": "mock"}
+    options = {"1": "ollama", "2": "openai", "3": "claude", "4": "mock"}
     print("Choose a provider:")
     print("  1. Ollama (local, no API key)")
     print("  2. OpenAI API (requires OPENAI_API_KEY in .env)")
-    print("  3. Mock (offline demonstration)")
+    print("  3. Claude API (requires ANTHROPIC_API_KEY in .env)")
+    print("  4. Mock (offline demonstration)")
     while True:
         choice = input("Provider : ").strip() or "1"
         if choice in options:
             return options[choice]
-        print("Enter 1, 2, or 3.")
+        print("Enter 1, 2, 3, or 4.")
 
 
 def choose_model(provider: str) -> None:
@@ -34,21 +35,31 @@ def choose_model(provider: str) -> None:
         print(default)
         model = input(f"OpenAI model [{default}]: ").strip() or default
         os.environ["OPENAI_MODEL"] = model
+    elif provider == "claude":
+        default = os.environ.get("CLAUDE_MODEL", "claude-sonnet-5")
+        model = input(f"Claude model [{default}]: ").strip() or default
+        os.environ["CLAUDE_MODEL"] = model
     else:
         print("Mock mode does not use a model.")
 
 
 def choose_suite() -> str:
-    options = {"1": "single-turn", "2": "multi-turn", "3": "all"}
+    options = {
+        "1": "single-turn",
+        "2": "multi-turn",
+        "3": "real-world",
+        "4": "all",
+    }
     print("\nChoose a test suite:")
     print("  1. Single-turn attacks (50 cases)")
     print("  2. Multi-turn attacks (50 cases)")
-    print("  3. All tests (100 cases)")
+    print("  3. Real-world scenarios (16 cases)")
+    print("  4. All tests (116 cases)")
     while True:
-        choice = input("Suite [3]: ").strip() or "3"
+        choice = input("Suite [4]: ").strip() or "4"
         if choice in options:
             return options[choice]
-        print("Enter 1, 2, or 3.")
+        print("Enter 1, 2, 3, or 4.")
 
 
 def main() -> None:

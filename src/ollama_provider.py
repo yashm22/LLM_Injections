@@ -30,7 +30,7 @@ def run_ollama_conversation(
             method="POST",
         )
         try:
-            with urlopen(request, timeout=120) as response:
+            with urlopen(request, timeout=300) as response:
                 payload = json.loads(response.read().decode("utf-8"))
         except URLError as error:
             raise RuntimeError(

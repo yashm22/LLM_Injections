@@ -65,6 +65,13 @@ and a benign control.
    python -m src.test_runner --provider openai
    ```
 
+7. To run against Claude, set `ANTHROPIC_API_KEY` and a valid `CLAUDE_MODEL` in
+   `.env`, then run:
+
+   ```powershell
+   python -m src.test_runner --provider claude --suite all
+   ```
+
 ## Interactive launcher
 
 To choose the provider and model each time, run:
@@ -73,12 +80,15 @@ To choose the provider and model each time, run:
 python -m src.interactive_runner
 ```
 
-Choose Ollama, OpenAI API, or mock mode when prompted. Ollama-specific code is
-in `src/ollama_provider.py`; OpenAI-specific code is in `src/openai_provider.py`.
-The launcher then lets you select the single-turn suite, multi-turn suite, or
-all 100 tests.
+Choose Ollama, OpenAI API, Claude API, or mock mode when prompted. Ollama-specific
+code is in `src/ollama_provider.py`; OpenAI-specific code is in
+`src/openai_provider.py`; Claude-specific code is in `src/claude_provider.py`.
+  The launcher then lets you select the single-turn suite, multi-turn suite,
+real-world scenarios, or all 116 tests.
 
-Results are written to `results/`. Use only systems you own or are authorized to test. Test canaries are fake by design.
+Results are split into `results/passed/` and `results/failed/`, with filenames
+such as `qwen3_8b_Passed_Cases_20260905T120000Z.jsonl`. Use only systems you own
+or are authorized to test. Test canaries are fake by design.
 The grader detects the protected canary in plain text and common reversible forms,
 including Base64, hexadecimal, ROT13, reversed, spaced, and fragmented output.
 Every run displays live progress for each test case, including its number, ID,
@@ -92,8 +102,14 @@ The bundled suites are separate files in `cases/` and can be selected with:
 ```powershell
 python -m src.test_runner --provider mock --suite single-turn
 python -m src.test_runner --provider mock --suite multi-turn
+python -m src.test_runner --provider mock --suite real-world
 python -m src.test_runner --provider mock --suite all
 ```
+
+The real-world suite contains synthetic email, support-ticket, webpage, calendar,
+CRM, invoice, code-review, knowledge-base, work-chat, and business-document
+scenarios. It uses fake canaries only and never connects to real accounts or
+services.
 
 ## Sources and next steps
 
